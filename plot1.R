@@ -24,10 +24,10 @@ if(file.exists("desiredData.txt")){ #processed file exists
 {
         tempFile <- tempfile() # download as a temporary file
         download.file(fileUrl, tempFile)
-        #unzip(tempFile, list =  TRUE) #unzip the file
+        
         # read and load the whole file - as my computer permits (alternate is to use readLines) 
-        dataAll <- fread(unzip(tempFile, "household_power_consumption.txt"), na.strings = "?")
-        unlink(tempFile) # unlink for garbage collection
+        dataAll <- fread(unzip(tempFile, "household_power_consumption.txt"), na.strings = "?") #missing values are coded as "?"
+        unlink(tempFile) # unlink tempFile
         
         #find the index of desired data
         dIndex <- grep("^[1,2]/2/2007", dataAll$Date)
@@ -50,10 +50,10 @@ globalActivePower <- as.numeric(powerData$Global_active_power)
 png("plot1.png", width = 480, height = 480)
 
 # plot a histogram to the png device
-hist(globalActivePower, main = "Global Active Power", #title
-     xlab = "Global Active Power (kilowatts)", # label of x-axix
-     ylab = "Frequency", # y-axis label
-     col = "red" # color for the bar
+hist(globalActivePower, main = "Global Active Power",   # title
+     xlab = "Global Active Power (kilowatts)",          # label of x-axix
+     ylab = "Frequency",                                # y-axis label
+     col = "red"                                        # color for the bar
      )
 
 # device should be off

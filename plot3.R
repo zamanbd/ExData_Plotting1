@@ -24,10 +24,10 @@ if(file.exists("desiredData.txt")){ #processed file exists
 {
         tempFile <- tempfile() # download as a temporary file
         download.file(fileUrl, tempFile)
-        #unzip(tempFile, list =  TRUE) #unzip the file
+        
         # read and load the whole file - as my computer permits (alternate is to use readLines) 
-        dataAll <- fread(unzip(tempFile, "household_power_consumption.txt"), na.strings = "?")
-        unlink(tempFile) # unlink for garbage collection
+        dataAll <- fread(unzip(tempFile, "household_power_consumption.txt"), na.strings = "?") #missing values are coded as "?"
+        unlink(tempFile) # unlink tempFile
         
         #find the index of desired data
         dIndex <- grep("^[1,2]/2/2007", dataAll$Date)
@@ -39,7 +39,6 @@ if(file.exists("desiredData.txt")){ #processed file exists
         rm("dataAll", "fileUrl", "dIndex", "requiredData", "tempFile")  
         
 }
-
 ### clean data ready to load - using fread to cover both cases
 powerData <- fread("desiredData.txt")
 
@@ -56,7 +55,7 @@ png("plot3.png", width = 480, height = 480)
 
 # plot
 
-plot(dateAndTime, subMet1, type = "l", # line type
+plot(dateAndTime, subMet1, type = "l", # line type, subMet1 plotted
      xlab = "",                        # to avoid var name as xlbael
      ylab = "Energy sub metering")     # no title
 # add subMet2
@@ -71,7 +70,7 @@ legend("topright",
                   "Sub_metering_2",
                   "Sub_metering_3"
                   ),
-       col = c("black",               # legend color
+       col = c("black",               # legend color, legend border is default
                "red",
                "blue"
                ),

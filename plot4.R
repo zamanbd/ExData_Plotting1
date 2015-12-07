@@ -24,10 +24,10 @@ if(file.exists("desiredData.txt")){ #processed file exists
 {
         tempFile <- tempfile() # download as a temporary file
         download.file(fileUrl, tempFile)
-        #unzip(tempFile, list =  TRUE) #unzip the file
+        
         # read and load the whole file - as my computer permits (alternate is to use readLines) 
-        dataAll <- fread(unzip(tempFile, "household_power_consumption.txt"), na.strings = "?")
-        unlink(tempFile) # unlink for garbage collection
+        dataAll <- fread(unzip(tempFile, "household_power_consumption.txt"), na.strings = "?") #missing values are coded as "?"
+        unlink(tempFile) # unlink tempFile
         
         #find the index of desired data
         dIndex <- grep("^[1,2]/2/2007", dataAll$Date)

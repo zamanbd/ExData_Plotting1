@@ -24,10 +24,10 @@ if(file.exists("desiredData.txt")){ #processed file exists
 {
         tempFile <- tempfile() # download as a temporary file
         download.file(fileUrl, tempFile)
-        #unzip(tempFile, list =  TRUE) #unzip the file
+        
         # read and load the whole file - as my computer permits (alternate is to use readLines) 
-        dataAll <- fread(unzip(tempFile, "household_power_consumption.txt"), na.strings = "?")
-        unlink(tempFile) # unlink for garbage collection
+        dataAll <- fread(unzip(tempFile, "household_power_consumption.txt"), na.strings = "?") #missing values are coded as "?"
+        unlink(tempFile) # unlink tempFile
         
         #find the index of desired data
         dIndex <- grep("^[1,2]/2/2007", dataAll$Date)
@@ -40,6 +40,7 @@ if(file.exists("desiredData.txt")){ #processed file exists
         
 }
 
+
 ### clean data ready to load - using fread to cover both cases
 powerData <- fread("desiredData.txt")
 
@@ -48,14 +49,14 @@ globalActivePower <- as.numeric(powerData$Global_active_power)
 
 # retrieve date & time of the required format
 
-dateAndTiem <- strptime(paste(powerData$Date, powerData$Time), format = "%d/%m/%Y %H:%M:%S")
+dateAndTime <- strptime(paste(powerData$Date, powerData$Time), format = "%d/%m/%Y %H:%M:%S")
 
 # set png device for ploting
 png("plot2.png", width = 480, height = 480)
 
 # plot
 
-plot(dateAndTiem, globalActivePower, type = "l", # line type
+plot(dateAndTime, globalActivePower, type = "l", # line type
      xlab = "",                                  # to avoid var name as xlbael
      ylab = "Global Active Power (kilowatts)")   # no title
 
